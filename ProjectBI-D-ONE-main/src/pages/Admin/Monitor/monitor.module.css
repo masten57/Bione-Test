@@ -1,0 +1,424 @@
+/* ==== Halaman dasar ==== */
+.background { min-height: 100vh; background: #ffffff; }
+.main { flex: 1; min-width: 0; }
+.wrap { margin-left: var(--sidebarW, 250px); padding: 12px 16px 24px; }
+
+.title { margin: 0 0 14px; font-weight: 800; color: #111827; font-size: 22px; }
+
+.warning {
+  background: #fff8e1; border: 1px solid #ffe082; color: #7a5d2d;
+  padding: 10px 12px; border-radius: 12px; margin-bottom: 10px;
+}
+.loading { height: 4px; border-radius: 999px; background: #e5e7eb; overflow: hidden; margin-bottom: 12px; }
+.loading::after { content: ""; display: block; height: 100%; width: 35%; background: #1976d2; border-radius: inherit; animation: lb 1s linear infinite; }
+@keyframes lb { 0% { transform: translateX(-100%); } 100% { transform: translateX(300%); } }
+
+/* ===== Dua kartu berdampingan ===== */
+.cardsRow{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: stretch;
+}
+@media (max-width: 980px){
+  .cardsRow{ grid-template-columns: 1fr; }
+}
+
+/* ==== Card umum ==== */
+.card, .kpiCard {
+  background: #fff;
+  border: 1px solid #9b9b9b;
+  border-radius: 14px;
+  padding: 10px 10px;
+}
+
+.heatCard {
+  background: #fff;
+  border: 1px solid #9b9b9b;
+  border-radius: 14px;
+  margin-top: 8px;
+  padding: 10px 10px;
+}
+
+.cardHeadRow {  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  margin-bottom: 8px;}
+.cardHead { font-weight: 700; font-size: 16px; color: #0f172a; }
+.chartBox { display: flex; align-items: center; }
+.empty { width: 100%; padding: 24px; text-align: center; color: #64748b; }
+
+.actions { display: flex; align-items: center; gap: 10px; }
+.sortGroup { display: flex; align-items: center; gap: 8px; }
+.sortGroup label { font-size: 13px; color: #475569; }
+.sortGroup select,
+.kpiSelect{
+  appearance: none; border: 1px solid #e5e7eb; background: #fff; color: #111827;
+  padding: 6px 28px 6px 10px; border-radius: 10px; font-weight: 600; font-size: 13px;
+  background-image: linear-gradient(45deg, transparent 50%, #9ca3af 50%),
+                    linear-gradient(135deg, #9ca3af 50%, transparent 50%),
+                    linear-gradient(to right, transparent, transparent);
+  background-position: calc(100% - 16px) calc(50% - 3px), calc(100% - 10px) calc(50% - 3px), 100% 0;
+  background-size: 6px 6px, 6px 6px, 2.5em 2.5em; background-repeat: no-repeat;
+}
+
+.viewBtn {
+  appearance: none; background: #2f6ef3; border: 1px solid #2f6ef3; color: #fff;
+  padding: 8px 12px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer;
+}
+.viewBtn:hover { filter: brightness(.95); }
+
+.footLeft{
+  font-size:13px;
+  color:#475569;
+}
+
+.footLeft b{
+  margin-left:6px;
+  color:#0f172a;
+}
+
+.footNote { color: #475569; font-size: 13px; }
+
+/* ==== KPI Card ==== */
+.kpiTop {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  margin-bottom: 8px;
+}
+
+.kpiTitle { display:flex; align-items:center; gap:10px; font-weight:800; font-size:16px; color:#0f172a; }
+
+.kpiLogo { display:inline-flex; width:28px; height:28px; border-radius:10px; background:#2f4d8e; color:#e8efff; align-items:center; justify-content:center; }
+
+.kpiLogo svg { width:18px; height:18px; }
+
+.kpiDot{ width: 10px; height: 10px; border-radius: 9999px; background: #2f6ef3; display: inline-block; }
+
+.kpiRight{ display:flex; align-items:center; gap:8px; }
+
+.kpiSelect {
+  appearance:none;
+  border:1px solid #e5e7eb; background:#fff; color:#111827;
+  padding:6px 28px 6px 10px; border-radius:10px; font-weight:700; font-size:13px;
+  background-image: linear-gradient(45deg, transparent 50%, #9ca3af 50%),
+                    linear-gradient(135deg, #9ca3af 50%, transparent 50%),
+                    linear-gradient(to right, transparent, transparent);
+  background-position: calc(100% - 16px) calc(50% - 3px), calc(100% - 10px) calc(50% - 3px), 100% 0;
+  background-size: 6px 6px, 6px 6px, 2.5em 2.5em; background-repeat:no-repeat;
+}
+
+.kpiStats { display:flex; gap:18px; padding:2px 0 6px; }
+.statItem { color:#475569; font-size:13px; }
+.statItem b { margin-left:6px; color:#0f172a; }
+
+.deltaUp{ color:#17a34a; font-weight:700; margin-left:6px; }
+
+.deltaDown{ color:#e11d48; font-weight:700; margin-left:6px; }
+
+.miniChartBox{ min-height: 40px; }
+
+/* ==== Modal (warna biru di header sesuai permintaan sebelumnya) ==== */
+.modalOverlay { position: fixed; inset: 0; background: rgba(15,23,42,.45); display: flex; align-items: center; justify-content: center; z-index: 1300; }
+.modal { width: min(1250px, 96vw); background: #fff; border-radius: 14px; overflow: hidden; border: 1px solid #e6e8f2; box-shadow: 0 30px 80px rgba(2,6,23,.35); }
+.modalHead { display: flex; align-items: center; justify-content: space-between; background:#2f4d8e; color:#fff; padding: 12px 16px; border-bottom:none; }
+.modalTitle { color:#fff; font-weight:750; font-size:16px; }
+.closeBtn { appearance:none; border:1px solid rgba(255,255,255,.35); background:transparent; color:#fff; width:32px; height:32px; border-radius:8px; font-size:20px; cursor:pointer; }
+.closeBtn:hover { background: rgba(255,255,255,.15); border-color: rgba(255,255,255,.45); }
+
+.modalBody { display: grid; grid-template-columns: 1fr; gap: 12px; padding: 12px; }
+@media (min-width: 980px) { .modalBody { grid-template-columns: 56% 1fr; } }
+.modalChart { min-height: 380px; display: flex; align-items: center; }
+.tableWrap { overflow: auto; }
+.table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 14px; }
+.table thead th { position: sticky; top: 0; background: #f8fafc; z-index: 1; font-weight: 800; text-align: left; padding: 10px 10px; border-bottom: 1px solid #e2e8f0; }
+.table tbody td { padding: 10px; border-bottom: 1px solid #eef2f7; }
+.table tbody tr:hover { background: #f9fafb; }
+
+/* Responsif */
+@media (max-width: 720px) {
+  .wrap { margin-left: 0; padding: 10px; }
+}
+
+/* segmented icon switch */
+.segGroup{
+  display:flex; align-items:center; gap:8px;
+  padding:4px; border-radius:999px;
+  background:#f3f4f6; border:1px solid #e5e7eb;
+}
+.segBtn{
+  width:34px; height:34px; border-radius:999px;
+  display:inline-flex; align-items:center; justify-content:center;
+  border:1px solid transparent; background:transparent; color:#64748b;
+  cursor:pointer; transition: all .15s ease;
+}
+.segBtn svg{ width:18px; height:18px; }
+.segBtn:hover{ background:#fff; color:#334155; }
+.segBtnActive{
+  background:#2f6ef3; color:#fff; box-shadow:0 6px 12px rgba(47,110,243,.2);
+}
+
+/* --- Card footer --- */
+.cardFoot{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0px 2px 2px;
+}
+
+.switchWrap{
+  display:flex;
+  align-items:center;
+}
+
+/* Wadah gelap oval */
+.switchTrack{
+  display:inline-flex;
+  gap:4px;
+  padding:4px;
+  border-radius:9999px;
+  background:#dfdfdf;
+}
+
+/* Tombol di dalam wadah gelap */
+.switchTrack .tabBtn{
+  border:0;                                  /* buang border putih lama */
+  background:transparent;
+  color:#525252;                              /* teks abu terang */
+  padding:6px 10px;                          /* sedikit lebih tebal */
+  border-radius:9999px;
+  font-weight:800;
+  transition:transform .14s ease, background .14s ease, color .14s ease;
+  box-shadow:none;                            /* default tanpa shadow */
+}
+
+/* Hover tombol (non-aktif) -> tidak jadi putih */
+.switchTrack .tabBtn:hover{
+  background:rgba(255,255,255,.06);
+  color:#f8fafc;
+}
+
+/* Aktif: tetap biru seperti sebelumnya */
+.switchTrack .tabBtnActive{
+  background:#2f6ef3;                         /* biru */
+  color:#fff;
+}
+
+/* Hover saat aktif -> tetap biru (tidak memutih) */
+.switchTrack .tabBtnActive:hover{
+  background:#2f6ef3;
+  color:#fff;
+}
+
+/* Ikon mengikuti warna teks */
+.switchTrack .tabIcon{ display:inline-flex; width:16px; height:16px; }
+.switchTrack .tabIcon svg{ width:16px; height:16px; }
+
+/* (Opsional) sentuhan feedback klik */
+.switchTrack .tabBtn:active{ transform: translateY(1px); }
+
+/* Hapus style lama kalau ada (agar tidak bentrok) */
+.switchBar{ display:none; }  /* kalau sebelumnya masih ada kelas ini */
+
+.tabBtn{
+  display:inline-flex;
+  align-items:center;
+  gap:2px;
+  padding:8px 12px;
+  border-radius:999px;
+  border:1px solid #e5e7eb;
+  background:#fff;
+  color:#334155;
+  font-weight:700;
+  font-size:13px;
+  cursor:pointer;
+  transition:all .15s ease;
+}
+
+.tabBtn:hover{ background:#f8fafc; }
+
+.tabBtnActive{
+  background:#2f6ef3;
+  color:#fff;
+  border-color:#2f6ef3;
+}
+
+/* Hover hanya untuk tombol yang TIDAK aktif */
+.tabBtn:not(.tabBtnActive):hover{
+  background:#f8fafc;
+  color:#334155;
+  border-color:#e5e7eb;
+}
+
+/* Saat tombol aktif di-hover, tetap biru */
+.tabBtnActive:hover,
+.tabBtnActive:focus-visible{
+  background:#2f6ef3;
+  color:#fff;
+  border-color:#2f6ef3;
+  filter: brightness(.97); /* opsional efek hover halus */
+}
+
+/* (opsional) pastikan ikon ikut warna teks */
+.tabBtn svg { fill: currentColor; }
+
+.tabIcon{ display:inline-flex; width:16px; height:16px; }
+.tabIcon svg{ width:16px; height:16px; }
+
+/* (yang lama – segmented icon switch di header) optional kalau tidak dipakai bisa dibiarkan */
+.segGroup{ display:none; } /* disembunyikan karena kita pindah ke footer */
+
+/* Pastikan wrapper mengikuti tinggi variabel */
+.miniChartBox,
+.chartBox {
+  height: var(--chart-h);
+  /* kalau sebelumnya kamu pakai align-items:center bikin ruang kosong, matikan: */
+  display: block;           /* ganti dari flex */
+  /* align-items: center;  <-- hapus kalau ada */
+}
+
+/* === Heatmap (ala GitHub) === */
+.heatBox{
+  --heat-cell: 16px;
+  --heat-gap: 3px;
+  --heat-wday-w: 45px;  /* <- dari 88px */
+  --heat-wgap: 6px;     /* <- jarak antara kolom hari & grid */
+}
+
+.heatInner{
+  width: max-content;
+  margin: 0 auto;                  /* center horizontally */
+}
+
+.heatWeekdayColFull{
+  display: grid;
+  grid-template-rows: repeat(7, var(--heat-cell));
+  align-content: start;
+  gap: var(--heat-gap);
+  width: var(--heat-wday-w);
+  color:#64748b;
+  font-size: 12px;
+  user-select: none;
+}
+
+.heatWeekdayColFull span{ line-height: var(--heat-cell); }
+
+/* grid tanggal */
+.heatWrap{
+  display: grid;
+  grid-template-columns: auto max-content;  /* <= penting agar pas lebar grid */
+  align-items: start;
+  gap: var(--heat-wgap);
+  justify-content: center;                  /* center whole block */
+}
+
+.heatGrid{
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(7, var(--heat-cell));
+  gap: var(--heat-gap);
+}
+
+.heatCell{
+  width: var(--heat-cell);
+  height: var(--heat-cell);
+  border-radius: var(--heat-round);
+  box-shadow: inset 0 0 0 1px rgba(15,23,42,.05);
+  transition: transform .06s ease, box-shadow .12s ease, filter .12s ease;
+}
+.heatCell:hover{
+  transform: scale(1.15);
+  box-shadow: 0 2px 6px rgba(2,6,23,.12);
+  filter: brightness(1.05);
+}
+.outYear{ background: #f3f4f6; opacity: .4; }
+
+/* skala warna hijau seperti GitHub */
+.lv0{ background: #e9eef5; }   /* kosong/low */
+.lv1{ background: #cdebd6; }
+.lv2{ background: #86df9a; }
+.lv3{ background: #39c172; }
+.lv4{ background: #149c4a; }
+
+.heatLegend{
+  display:flex; align-items:center; gap:6px;
+  margin-top:10px;
+  justify-content:center;      /* center */
+  color:#64748b; font-size:12px;
+}
+
+.heatSwatch{
+  width: var(--heat-cell);
+  height: var(--heat-cell);
+  border-radius: var(--heat-round);
+  display:inline-block;
+  box-shadow: inset 0 0 0 1px rgba(15,23,42,.05);
+}
+
+/* ==== Tooltip instan ala GitHub ==== */
+.hmCell {
+  position: relative;
+  width: var(--heat-cell);
+  height: var(--heat-cell);
+}
+
+.hmTip{
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  transform: translate(-50%, -8px) scale(.98);
+  opacity: 0;
+  pointer-events: none;
+  background: #374151;   /* abu gelap */
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1;
+  white-space: nowrap;
+  padding: 10px 12px;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(2,6,23,.25);
+  z-index: 9999;
+  transition: opacity .08s ease, transform .08s ease;
+  transition-delay: 0s;  /* no delay */
+}
+
+.hmTip{ z-index: 9999; }
+
+.hmCell:hover .hmTip{
+  opacity: 1;
+  transform: translate(-50%, -12px) scale(1);
+  transition-delay: 0s;  /* no delay */
+}
+
+.hmTip::after{
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: #374151;
+}
+
+/* (opsional) bikin card heatmap lebih tinggi */
+.heatmapCard { min-height: 260px; }
+
+/* modal heatmap – sedikit dibesarkan */
+.heatBig{ --heat-cell: 18px; --heat-gap: 4px; }
+
+/* optional: card heatmap membuat stacking context */
+.heatCard, .card { position: relative; z-index: 10; }
+
+.heatMonthRow{
+  display:grid;
+  gap: var(--heat-gap);        /* <-- sebelumnya 6px */
+  margin: 6px 0 8px;
+  font-weight:700;
+  color:#64748b;
+  font-size:13px;
+  justify-content:start;
+  padding-left: calc(var(--heat-wday-w) + var(--heat-wgap));
+}
+
+.heatMonthRow span{
+  white-space: nowrap;      /* jangan terbungkus */
+  justify-self: start;      /* mulai dari kolomnya */
+}
