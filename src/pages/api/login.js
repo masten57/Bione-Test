@@ -3,14 +3,13 @@ import db from '@/lib/db';
 import bcrypt from 'bcryptjs';
 import { SignJWT } from 'jose';
 
-// -- fallback aman untuk ns
 const NS_RE = /^[a-zA-Z0-9_-]{3,32}$/;
 function safeGetNs(req) {
   const q = req.query?.ns;
   const fromBody = req.body?.ns;
   const fromHeader = req.headers['x-bione-ns'];
-  const fromCookieMatch = /(?:^|;\s*)ns=([^;]+)/.exec(req.headers.cookie || '');
-  return (q || fromBody || fromHeader || (fromCookieMatch?.[1]) || '').trim();
+  const cookieMatch = /(?:^|;\s*)ns=([^;]+)/.exec(req.headers.cookie || '');
+  return (q || fromBody || fromHeader || cookieMatch?.[1] || '').trim();
 }
 
 export default async function handler(req, res) {
@@ -24,35 +23,33 @@ export default async function handler(req, res) {
   const password = req.body?.password || '';
 
   if (!email || !password || !NS_RE.test(ns)) {
-    return res.status(400).json({ error: 'Email, password, dan ns wajib diisi (ns 3-32 alnum_-).' });
+    return res.status(400).json({ error: 'Email, password, dan ns wajib (ns 3–32 alnum/_-).' });
   }
 
   try {
     const [rows] = await db.query(
-      `SELECT u.id, u.email, u.name, u.phone, u.password, u.verification_status_id, u.rejection_reason,
-              vs.name AS verification_status_name
-       FROM users u
-       JOIN verification_status vs ON vs.id = u.verification_status_id
-       WHERE u.email = ? LIMIT 1`,
+      `SELECT u.id, u.email, u.name, u.phone, u.password, u.verification_status_id, u.rejection_reason
+       FROM users u WHERE u.email = ? LIMIT 1`,
       [email]
     );
-
     if (!rows.length) return res.status(401).json({ error: 'Email atau password salah' });
-    const user = rows[0];
 
-    if (user.verification_status_id === 1)
+    const u = rows[0];
+    if (u.verification_status_id === 1)
       return res.status(403).json({ error: 'Akun Anda masih menunggu verifikasi admin (Pending).' });
-    if (user.verification_status_id === 3)
-      return res.status(403).json({ error: `Akun Anda ditolak.${user.rejection_reason ? ' Alasan: ' + user.rejection_reason : ''}` });
+    if (u.verification_status_id === 3)
+      return res.status(403).json({ error: `Akun Anda ditolak.${u.rejection_reason ? ' Alasan: ' + u.rejection_reason : ''}` });
 
-    const ok = await bcrypt.compare(password, user.password);
+    const ok = await bcrypt.compare(password, u.password);
     if (!ok) return res.status(401).json({ error: 'Email atau password salah' });
 
     const secret = process.env.JWT_SECRET;
     if (!secret) return res.status(500).json({ error: 'JWT_SECRET belum diset.' });
 
     const maxAge = 60 * 60; // 1 jam
-    const token = await new SignJWT({ sub: String(user.id), email: user.email, name: user.name, role: 'user', phone: user.phone ?? null, ns })
+    const token = await new SignJWT({
+      sub: String(u.id), email: u.email, name: u.name, phone: u.phone ?? null, ns
+    })
       .setProtectedHeader({ alg: 'HS256' })
       .setIssuedAt()
       .setExpirationTime(`${maxAge}s`)
@@ -61,19 +58,19 @@ export default async function handler(req, res) {
     const isProd = process.env.NODE_ENV === 'production';
     res.setHeader('Set-Cookie', [
       `user_session_${ns}=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${maxAge}${isProd ? '; Secure' : ''}`,
-      `user_session=; HttpOnly; Path=/; SameSite=Lax; Max-Age=0${isProd ? '; Secure' : ''}`,
-      `user_token=; HttpOnly; Path=/; SameSite=Lax; Max-Age=0${isProd ? '; Secure' : ''}`,
-      `token=; HttpOnly; Path=/; SameSite=Lax; Max-Age=0${isProd ? '; Secure' : ''}`,
+      `user_session=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0${isProd ? '; Secure' : ''}`,
+      `user_token=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0${isProd ? '; Secure' : ''}`,
+      `token=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0${isProd ? '; Secure' : ''}`,
     ]);
 
     return res.status(200).json({
       ok: true,
       ns,
       redirect: `/User/HalamanUtama/hal-utamauser?ns=${encodeURIComponent(ns)}`,
-      whoami: { id: user.id, email: user.email, name: user.name, ns },
+      whoami: { id: u.id, email: u.email, name: u.name, ns },
     });
   } catch (e) {
-    console.error('LOGIN_ERROR', e); // -> cek di Vercel Function logs
+    console.error('LOGIN_ERROR', e);
     return res.status(500).json({ error: 'Terjadi kesalahan server.' });
   }
 }
